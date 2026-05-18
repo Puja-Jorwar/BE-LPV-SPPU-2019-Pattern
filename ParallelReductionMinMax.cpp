@@ -52,3 +52,30 @@ int main() {
 
     return 0;
 }
+
+// Sample Input:
+// Enter number of elements: 5
+// Enter elements:
+// 10 20 5 40 15
+//
+// Sample Output:
+//
+// Minimum Value = 5
+// Maximum Value = 40
+// Sum = 90
+// Average = 18
+
+// To Enable OpenMP in Dev-C++
+//
+// 1. Go to:
+//    Tools -> Compiler Options
+//
+// 2. In "General" tab,
+//    tick:
+//    "Add the following commands when calling compiler"
+//
+// 3. Write:
+//    -fopenmp
+//
+// 4. Click OK
+
