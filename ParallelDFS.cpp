@@ -82,3 +82,17 @@ int main() {
 
     return 0;
 }
+
+// Sample Input:
+// Enter number of vertices: 5
+// Enter number of edges: 4
+// Enter edges (u v):
+// 0 1
+// 0 2
+// 1 3
+// 2 4
+// Enter starting vertex: 0
+//
+// Sample Output:
+//
+// Parallel DFS Traversal: 0 2 4 1 3
