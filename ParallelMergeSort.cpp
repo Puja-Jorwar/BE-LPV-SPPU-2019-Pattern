@@ -134,3 +134,35 @@ int main() {
 
     return 0;
 }
+
+// Sample Input:
+// Enter number of elements: 6
+// Enter elements:
+// 38 27 43 3 9 82
+//
+// Sample Output:
+//
+// Sequential Merge Sort:
+// 3 9 27 38 43 82
+// Time Taken: 0.000002 seconds
+//
+// Parallel Merge Sort:
+// 3 9 27 38 43 82
+// Time Taken: 0.000145 seconds
+
+
+
+
+// To Enable OpenMP in Dev-C++
+//
+// 1. Go to:
+//    Tools -> Compiler Options
+//
+// 2. In "General" tab,
+//    tick:
+//    "Add the following commands when calling compiler"
+//
+// 3. Write:
+//    -fopenmp
+//
+// 4. Click OK
