@@ -66,3 +66,9 @@ int main() {
 
     return 0;
 }
+
+// Sample Output:
+//
+// Matrix Multiplication Result:
+// 19 22
+// 43 50
