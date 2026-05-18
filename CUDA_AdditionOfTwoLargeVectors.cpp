@@ -45,3 +45,8 @@ int main() {
 
     return 0;
 }
+
+// Sample Output:
+//
+// Vector Addition Result:
+// 11 22 33 44 55
