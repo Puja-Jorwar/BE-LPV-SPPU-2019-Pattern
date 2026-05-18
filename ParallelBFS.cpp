@@ -1,50 +1,46 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <omp.h>
 
 using namespace std;
 
-// Sequential Bubble Sort
-void sequentialBubbleSort(vector<int>& arr) {
+// Parallel BFS using OpenMP
+void parallelBFS(vector<vector<int> >& graph,
+                 int start,
+                 int vertices) {
 
-    int n = arr.size();
+    vector<bool> visited(vertices, false);
 
-    for (int i = 0; i < n - 1; i++) {
+    queue<int> q;
 
-        for (int j = 0; j < n - i - 1; j++) {
+    visited[start] = true;
+    q.push(start);
 
-            if (arr[j] > arr[j + 1]) {
+    cout << "BFS Traversal: ";
 
-                swap(arr[j], arr[j + 1]);
-            }
-        }
-    }
-}
+    while (!q.empty()) {
 
-// Parallel Bubble Sort using OpenMP
-void parallelBubbleSort(vector<int>& arr) {
+        int node = q.front();
+        q.pop();
 
-    int n = arr.size();
+        cout << node << " ";
 
-    for (int i = 0; i < n; i++) {
-
-        // Odd phase
         #pragma omp parallel for
-        for (int j = 1; j < n - 1; j += 2) {
+        for (int i = 0; i < graph[node].size(); i++) {
 
-            if (arr[j] > arr[j + 1]) {
+            int adjNode = graph[node][i];
 
-                swap(arr[j], arr[j + 1]);
-            }
-        }
+            if (!visited[adjNode]) {
 
-        // Even phase
-        #pragma omp parallel for
-        for (int j = 0; j < n - 1; j += 2) {
+                #pragma omp critical
+                {
+                    if (!visited[adjNode]) {
 
-            if (arr[j] > arr[j + 1]) {
-
-                swap(arr[j], arr[j + 1]);
+                        visited[adjNode] = true;
+                        q.push(adjNode);
+                    }
+                }
             }
         }
     }
@@ -52,65 +48,57 @@ void parallelBubbleSort(vector<int>& arr) {
 
 int main() {
 
-    int n;
+    int vertices, edges;
 
-    cout << "Enter number of elements: ";
-    cin >> n;
+    cout << "Enter number of vertices: ";
+    cin >> vertices;
 
-    vector<int> arr(n), arr2(n);
+    cout << "Enter number of edges: ";
+    cin >> edges;
 
-    cout << "Enter elements:\n";
+    vector<vector<int> > graph(vertices);
 
-    for (int i = 0; i < n; i++) {
+    cout << "Enter edges (u v):\n";
 
-        cin >> arr[i];
-        arr2[i] = arr[i];
+    for (int i = 0; i < edges; i++) {
+
+        int u, v;
+        cin >> u >> v;
+
+        graph[u].push_back(v);
+        graph[v].push_back(u); // Undirected Graph
     }
 
-    // Sequential Sorting
-    double start1 = omp_get_wtime();
+    int start;
 
-    sequentialBubbleSort(arr);
+    cout << "Enter starting vertex: ";
+    cin >> start;
 
-    double end1 = omp_get_wtime();
+    double startTime = omp_get_wtime();
 
-    // Parallel Sorting
-    double start2 = omp_get_wtime();
+    parallelBFS(graph, start, vertices);
 
-    parallelBubbleSort(arr2);
-
-    double end2 = omp_get_wtime();
-
-    cout << "\nSequential Bubble Sort:\n";
-
-    for (int x : arr)
-        cout << x << " ";
+    double endTime = omp_get_wtime();
 
     cout << "\nTime Taken: "
-         << end1 - start1 << " seconds\n";
-
-    cout << "\nParallel Bubble Sort:\n";
-
-    for (int x : arr2)
-        cout << x << " ";
-
-    cout << "\nTime Taken: "
-         << end2 - start2 << " seconds\n";
+         << endTime - startTime
+         << " seconds\n";
 
     return 0;
 }
 
+
 // Sample Input:
-// Enter number of elements: 5
-// Enter elements:
-// 5 2 8 1 3
+// Enter number of vertices: 5
+// Enter number of edges: 4
+// Enter edges (u v):
+// 0 1
+// 0 2
+// 1 3
+// 2 4
+// Enter starting vertex: 0
 //
 // Sample Output:
 //
-// Sequential Bubble Sort:
-// 1 2 3 5 8
-// Time Taken: 0.000001 seconds
-//
-// Parallel Bubble Sort:
-// 1 2 3 5 8
-// Time Taken: 0.000120 seconds
+// BFS Traversal: 0 1 2 3 4
+// Time Taken: 0.000123 seconds
