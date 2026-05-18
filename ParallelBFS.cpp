@@ -1,3 +1,17 @@
+// To Enable OpenMP in Dev-C++
+//
+// 1. Go to:
+//    Tools -> Compiler Options
+//
+// 2. In "General" tab,
+//    tick:
+//    "Add the following commands when calling compiler"
+//
+// 3. Write:
+//    -fopenmp
+//
+// 4. Click OK
+
 #include <iostream>
 #include <vector>
 #include <queue>
