@@ -1,0 +1,101 @@
+#include <iostream>
+#include <vector>
+#include <omp.h>
+
+using namespace std;
+
+// Sequential Bubble Sort
+void sequentialBubbleSort(vector<int>& arr) {
+
+    int n = arr.size();
+
+    for (int i = 0; i < n - 1; i++) {
+
+        for (int j = 0; j < n - i - 1; j++) {
+
+            if (arr[j] > arr[j + 1]) {
+
+                swap(arr[j], arr[j + 1]);
+            }
+        }
+    }
+}
+
+// Parallel Bubble Sort using OpenMP
+void parallelBubbleSort(vector<int>& arr) {
+
+    int n = arr.size();
+
+    for (int i = 0; i < n; i++) {
+
+        // Odd phase
+        #pragma omp parallel for
+        for (int j = 1; j < n - 1; j += 2) {
+
+            if (arr[j] > arr[j + 1]) {
+
+                swap(arr[j], arr[j + 1]);
+            }
+        }
+
+        // Even phase
+        #pragma omp parallel for
+        for (int j = 0; j < n - 1; j += 2) {
+
+            if (arr[j] > arr[j + 1]) {
+
+                swap(arr[j], arr[j + 1]);
+            }
+        }
+    }
+}
+
+int main() {
+
+    int n;
+
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    vector<int> arr(n), arr2(n);
+
+    cout << "Enter elements:\n";
+
+    for (int i = 0; i < n; i++) {
+
+        cin >> arr[i];
+        arr2[i] = arr[i];
+    }
+
+    // Sequential Sorting
+    double start1 = omp_get_wtime();
+
+    sequentialBubbleSort(arr);
+
+    double end1 = omp_get_wtime();
+
+    // Parallel Sorting
+    double start2 = omp_get_wtime();
+
+    parallelBubbleSort(arr2);
+
+    double end2 = omp_get_wtime();
+
+    cout << "\nSequential Bubble Sort:\n";
+
+    for (int x : arr)
+        cout << x << " ";
+
+    cout << "\nTime Taken: "
+         << end1 - start1 << " seconds\n";
+
+    cout << "\nParallel Bubble Sort:\n";
+
+    for (int x : arr2)
+        cout << x << " ";
+
+    cout << "\nTime Taken: "
+         << end2 - start2 << " seconds\n";
+
+    return 0;
+}
